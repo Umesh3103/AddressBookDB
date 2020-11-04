@@ -9,11 +9,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class AddressBookDBService {
 
 	private static AddressBookDBService addressBookDBService;
-	
+
 	private AddressBookDBService() {
 
 	}
@@ -25,24 +24,24 @@ public class AddressBookDBService {
 		return addressBookDBService;
 	}
 
-	public List<Details> readData() {
+	public List<Details> readData() throws AddressBookException {
 		String sql = "SELECT * FROM contacts";
 		return this.getAddressBookDataUsingDB(sql);
 	}
 
-	private List<Details> getAddressBookDataUsingDB(String sql) {
+	private List<Details> getAddressBookDataUsingDB(String sql) throws AddressBookException {
 		List<Details> addressBookList = new ArrayList<>();
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
 			addressBookList = this.getAddressBookData(resultSet);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.DB_PROBLEM);
 		}
 		return addressBookList;
 	}
 
-	private List<Details> getAddressBookData(ResultSet resultSet) {
+	private List<Details> getAddressBookData(ResultSet resultSet) throws AddressBookException {
 		List<Details> addressBookList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
@@ -53,7 +52,7 @@ public class AddressBookDBService {
 				addressBookList.add(new Details(firstName, lastName, phNum, email));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.DB_PROBLEM);
 		}
 		return addressBookList;
 	}
