@@ -17,4 +17,16 @@ public class AddressBookServiceTest {
 		} catch (AddressBookException e) {
 		}
 	}
+	
+	@Test
+	public void givenAddressBookDB_WhenUpdated_ShouldSyncWithDB(){
+		AddressBookService addressBookService = new AddressBookService();
+		try {
+			addressBookService.readAddressBookDB(IOService.DB_IO);
+			addressBookService.updateEmail("Umesh", "umesh.deora@gmail.com");
+			boolean result = addressBookService.checkContactInfoSyncWithDB("Umesh");
+			Assert.assertTrue(result);
+		} catch (AddressBookException e) {
+		}
+	}
 }

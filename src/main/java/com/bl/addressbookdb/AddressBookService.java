@@ -22,4 +22,22 @@ public class AddressBookService {
 		return this.addressBookList.size();
 	}
 
+	public void updateEmail(String name, String email) throws AddressBookException {
+		int result = addressBookDBService.updateEmail(name,email);
+		if (result == 0)
+			return;
+		Details contactDetails = this.getContactsData(name);
+		if (contactDetails != null)
+			contactDetails.setEmail(email);
+	}
+
+	private Details getContactsData(String name) {
+		return this.addressBookList.stream()
+				.filter(addressBookDataItem -> addressBookDataItem.getFirstName().equals(name)).findFirst().orElse(null);
+	}
+
+	public boolean checkContactInfoSyncWithDB(String name) throws AddressBookException {
+		List<Details> contactsDataList = addressBookDBService.getContactsData(name);
+		return contactsDataList.get(0).equals(getContactsData(name));
+	}
 }
