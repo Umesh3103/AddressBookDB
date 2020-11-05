@@ -9,8 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 public class AddressBookDBService {
 
@@ -117,5 +118,22 @@ public class AddressBookDBService {
 		String sql = String.format("SELECT * FROM contacts WHERE start BETWEEN '%s' AND '%s';",
 				Date.valueOf(startDate), Date.valueOf(endDate));
 		return this.getAddressBookDataUsingDB(sql);
+	}
+
+	public Map<String, Integer> readContactCountByCity() throws AddressBookException {
+		String sql ="SELECT state, COUNT(city) as city_count FROM address GROUP BY state;";
+		Map<String, Integer> countByCityStateMap= new HashMap<>();
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				String state = resultSet.getString("state");
+				int cityCount = resultSet.getInt("city_count");
+				countByCityStateMap.put(state, cityCount);
+			}
+		} catch (SQLException e) {
+			throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.DB_PROBLEM);
+		}
+		return countByCityStateMap;
 	}
 }

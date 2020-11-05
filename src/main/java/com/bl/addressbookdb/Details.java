@@ -23,6 +23,12 @@ public class Details {
 		this.phNum = phNum;
 		this.email = email;
 	}
+	
+	public Details(String firstName, String lastName, Long phNum,String email, String city, String state){
+		this(firstName, lastName, phNum, email);
+		this.city=city;
+		this.state=state;
+	}
 
 	public String getFirstName() {
 		return firstName;

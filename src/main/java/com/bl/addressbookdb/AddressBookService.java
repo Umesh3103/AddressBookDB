@@ -2,6 +2,7 @@ package com.bl.addressbookdb;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import com.bl.addressbookdb.AddressBookService.IOService;
 
@@ -47,6 +48,13 @@ public class AddressBookService {
 	public List<Details> readAddressBookForDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) throws AddressBookException {
 		if (ioService.equals(IOService.DB_IO)) {
 			return addressBookDBService.getAddressBookDetailsForDateRange(startDate, endDate);
+		}
+		return null;
+	}
+
+	public Map<String, Integer> readContactCountByCity(IOService ioService) throws AddressBookException {
+		if (ioService.equals(IOService.DB_IO)) {
+			return addressBookDBService.readContactCountByCity();
 		}
 		return null;
 	}

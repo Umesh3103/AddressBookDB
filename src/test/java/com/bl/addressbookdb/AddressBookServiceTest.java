@@ -2,6 +2,7 @@ package com.bl.addressbookdb;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,6 +44,18 @@ public class AddressBookServiceTest {
 			List<Details> addressBookList = addressBookService
 					.readAddressBookForDateRange(IOService.DB_IO, startDate, endDate);
 			Assert.assertEquals(4, addressBookList.size());
+		} catch (AddressBookException e) {
+		}
+	}
+	
+	@Test
+	public void givenAddressBookDB_WhenRetrievedByCityCount_ShouldReturnProperValue(){
+		AddressBookService addressBookService = new AddressBookService();
+		try {
+			addressBookService.readAddressBookDB(IOService.DB_IO);
+			Map<String, Integer> countOfCityByState;
+			countOfCityByState = addressBookService.readContactCountByCity(IOService.DB_IO);
+			Assert.assertTrue(countOfCityByState.get("Rajasthan").equals(4) && countOfCityByState.get("UP").equals(1) && countOfCityByState.get("Bihar").equals(1));
 		} catch (AddressBookException e) {
 		}
 	}
