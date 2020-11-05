@@ -1,6 +1,7 @@
 package com.bl.addressbookdb;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -110,5 +111,11 @@ public class AddressBookDBService {
 		} catch (SQLException e) {
 			throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.DB_PROBLEM);
 		}
+	}
+
+	public List<Details> getAddressBookDetailsForDateRange(LocalDate startDate, LocalDate endDate) throws AddressBookException {
+		String sql = String.format("SELECT * FROM contacts WHERE start BETWEEN '%s' AND '%s';",
+				Date.valueOf(startDate), Date.valueOf(endDate));
+		return this.getAddressBookDataUsingDB(sql);
 	}
 }
