@@ -1,6 +1,7 @@
 package com.bl.addressbookdb;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,5 +67,32 @@ public class AddressBookService {
 
 	public void addContactsToAddressBook(String firstName, String lastName, long phNum, String email, LocalDate start) throws AddressBookException {
 		addressBookList.add(addressBookDBService.addContactToAddressBook(firstName, lastName, phNum, email, start));
+	}
+
+	public int countEntries() {
+		return addressBookList.size();
+	}
+
+	public void addContactsToAddressBookWithThread(List<Details> addressBookDataList) {
+		Map<Integer, Boolean> addressBookAdditionStatus = new HashMap<>();
+		addressBookDataList.forEach(addressBookData -> {
+			Runnable task = () -> {
+				addressBookAdditionStatus.put(addressBookData.hashCode(), false);
+				System.out.println("Contact Being Added: "+Thread.currentThread().getName());
+				try {
+					this.addContactsToAddressBook(addressBookData.getFirstName(), addressBookData.getLastName(), addressBookData.getMobNum(), addressBookData.getEmail(), addressBookData.start);
+				} catch (AddressBookException e) {
+				}
+				addressBookAdditionStatus.put(addressBookData.hashCode(), true);
+				System.out.println("Contact Added: "+Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task,addressBookData.getFirstName());
+			thread.start();
+		});
+		while(addressBookAdditionStatus.containsValue(false)){
+			try{ Thread.sleep(10);
+			} catch (InterruptedException e){	
+			}
+		}
 	}
 }

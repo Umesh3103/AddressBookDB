@@ -1,6 +1,9 @@
 package com.bl.addressbookdb;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +21,7 @@ public class AddressBookServiceTest {
 		int result;
 		try {
 			result = addressBookService.readAddressBookDB(IOService.DB_IO);
-			Assert.assertEquals(7, result);
+			Assert.assertEquals(11, result);
 		} catch (AddressBookException e) {
 		}
 	}
@@ -44,7 +47,7 @@ public class AddressBookServiceTest {
 			LocalDate endDate = LocalDate.now();
 			List<Details> addressBookList = addressBookService
 					.readAddressBookForDateRange(IOService.DB_IO, startDate, endDate);
-			Assert.assertEquals(5, addressBookList.size());
+			Assert.assertEquals(9, addressBookList.size());
 		} catch (AddressBookException e) {
 		}
 	}
@@ -69,6 +72,26 @@ public class AddressBookServiceTest {
 			addressBookService.addContactsToAddressBook("Abhinav","Singh", 9983917564L, "abh@gmail.com", LocalDate.now());
 			boolean result = addressBookService.checkContactInfoSyncWithDB("Abhinav"); 
 			Assert.assertTrue(result);
+		} catch (AddressBookException e) {
+		}
+	}
+	
+	@Test
+	public void givenMultipleContacts_WhenAdded_ShouldMatchAddressBookEntries(){
+		Details[] arrayOfContacts = {
+			new Details("Jofra", "Archer", 7538964120L, "jfh@gmail.com", LocalDate.now()),
+			new Details("Rahul", "Tewatiya", 1234567890L, "rtw@gmail.com", LocalDate.now()),
+			new Details("Jos", "Buttler", 7894561230L, "jst@gmail.com", LocalDate.now()),
+			new Details("Ben", "Stokes", 4569512378L, "bst@gmail.com", LocalDate.now()),
+		};
+		AddressBookService addressBookService = new AddressBookService();
+		try {
+			addressBookService.readAddressBookDB(IOService.DB_IO);
+			Instant start = Instant.now();
+			addressBookService.addContactsToAddressBookWithThread(Arrays.asList(arrayOfContacts));
+			Instant end = Instant.now();
+			System.out.println("Duration with thread: " + Duration.between(start, end));
+			Assert.assertEquals(11,addressBookService.countEntries());
 		} catch (AddressBookException e) {
 		}
 	}

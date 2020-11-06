@@ -13,7 +13,7 @@ public class Details {
 	private String email;
 	private Long phNum;
 	private int id;
-	private LocalDate start;
+	public LocalDate start;
 
 	public Details() {
 
@@ -112,6 +112,11 @@ public class Details {
 		return "Details [firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 
+	@Override
+	public int hashCode(){
+		return Objects.hash(firstName, lastName, phNum, email, start);
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
