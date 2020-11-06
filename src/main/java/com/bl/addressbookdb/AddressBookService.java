@@ -19,6 +19,11 @@ public class AddressBookService {
 		addressBookDBService = AddressBookDBService.getInstance();
 	}
 
+	public AddressBookService(List<Details> addressBookList){
+		this();
+		this.addressBookList=addressBookList;
+	}
+	
 	public int readAddressBookDB(IOService ioService) throws AddressBookException {
 		if (ioService.equals(IOService.DB_IO)) {
 			this.addressBookList = addressBookDBService.readData();
@@ -57,5 +62,9 @@ public class AddressBookService {
 			return addressBookDBService.readContactCountByCity();
 		}
 		return null;
+	}
+
+	public void addContactsToAddressBook(String firstName, String lastName, long phNum, String email, LocalDate start) throws AddressBookException {
+		addressBookList.add(addressBookDBService.addContactToAddressBook(firstName, lastName, phNum, email, start));
 	}
 }

@@ -1,5 +1,6 @@
 package com.bl.addressbookdb;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class Details {
@@ -11,23 +12,35 @@ public class Details {
 	private int zip;
 	private String email;
 	private Long phNum;
+	private int id;
+	private LocalDate start;
 
 	public Details() {
 
 	}
 
-	public Details(String firstName, String lastName, Long phNum,String email) {
+	public Details(String firstName, String lastName, Long phNum,String email, LocalDate start) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phNum = phNum;
 		this.email = email;
+		this.start=start;
 	}
 	
-	public Details(String firstName, String lastName, Long phNum,String email, String city, String state){
-		this(firstName, lastName, phNum, email);
+	public Details(String firstName, String lastName, Long phNum,String email, LocalDate start, String city, String state){
+		this(firstName, lastName, phNum, email,start);
 		this.city=city;
 		this.state=state;
+	}
+
+	public Details(String firstName, String lastName, Long phNum,String email,LocalDate start,int contactId, String address, String city, String state, int zip) {
+		this(firstName, lastName, phNum, email,start);
+		this.id=contactId;
+		this.address=address;
+		this.city=city;
+		this.state=state;
+		this.zip=zip;
 	}
 
 	public String getFirstName() {
@@ -96,8 +109,30 @@ public class Details {
 
 	@Override
 	public String toString() {
-		return "Firstname=" + firstName + ", Lastname=" + lastName + ", Address=" + address + ", city=" + city
-				+ ", state=" + state + ", zip=" + zip + ", mobNum=" + phNum + ", email=" + email;
+		return "Details [firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Details other = (Details) obj;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		return true;
+	}
+	
+	
 }

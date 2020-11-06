@@ -9,15 +9,16 @@ import org.junit.Test;
 
 import com.bl.addressbookdb.AddressBookService.IOService;
 
-public class AddressBookServiceTest {
 
+public class AddressBookServiceTest {
+	
 	@Test
-	public void givenAddressBookDB_WhenRetrieved_ShouldMatchRecordsCount() {
+	public void givenParticularAddressBookDB_WhenRetrieved_ShouldMatchRecordsCount() {
 		AddressBookService addressBookService = new AddressBookService();
 		int result;
 		try {
 			result = addressBookService.readAddressBookDB(IOService.DB_IO);
-			Assert.assertEquals(6, result);
+			Assert.assertEquals(7, result);
 		} catch (AddressBookException e) {
 		}
 	}
@@ -43,7 +44,7 @@ public class AddressBookServiceTest {
 			LocalDate endDate = LocalDate.now();
 			List<Details> addressBookList = addressBookService
 					.readAddressBookForDateRange(IOService.DB_IO, startDate, endDate);
-			Assert.assertEquals(4, addressBookList.size());
+			Assert.assertEquals(5, addressBookList.size());
 		} catch (AddressBookException e) {
 		}
 	}
@@ -56,6 +57,18 @@ public class AddressBookServiceTest {
 			Map<String, Integer> countOfCityByState;
 			countOfCityByState = addressBookService.readContactCountByCity(IOService.DB_IO);
 			Assert.assertTrue(countOfCityByState.get("Rajasthan").equals(4) && countOfCityByState.get("UP").equals(1) && countOfCityByState.get("Bihar").equals(1));
+		} catch (AddressBookException e) {
+		}
+	}
+	
+	@Test 
+	public void givenNewContact_WhenAdded_ShouldSyncWithDB(){
+		AddressBookService addressBookService = new AddressBookService();
+		try {
+			addressBookService.readAddressBookDB(IOService.DB_IO);
+			addressBookService.addContactsToAddressBook("Abhinav","Singh", 9983917564L, "abh@gmail.com", LocalDate.now());
+			boolean result = addressBookService.checkContactInfoSyncWithDB("Abhinav"); 
+			Assert.assertTrue(result);
 		} catch (AddressBookException e) {
 		}
 	}
