@@ -30,11 +30,13 @@ public class AddressBookDBService {
 		return addressBookDBService;
 	}
 
+	// reading data by writing sql query
 	public List<Details> readData() throws AddressBookException {
 		String sql = "SELECT * FROM contacts";
 		return this.getAddressBookDataUsingDB(sql);
 	}
 
+	// getting data from the addressbook from database
 	private List<Details> getAddressBookDataUsingDB(String sql) throws AddressBookException {
 		List<Details> addressBookList = new ArrayList<>();
 		try (Connection connection = this.getConnection()) {
@@ -47,6 +49,7 @@ public class AddressBookDBService {
 		return addressBookList;
 	}
 
+	// getting addressbook data
 	public List<Details> getAddressBookData(ResultSet resultSet) throws AddressBookException {
 		List<Details> addressBookList = new ArrayList<>();
 		try {
@@ -64,6 +67,7 @@ public class AddressBookDBService {
 		return addressBookList;
 	}
 
+	// establishing connection
 	private synchronized Connection getConnection() throws SQLException {
 		connectionCounter++;
 		String jdbcURL = "jdbc:mysql://localhost:3306/address_book_service?useSSL=false";
@@ -80,6 +84,7 @@ public class AddressBookDBService {
 		return this.updateEmailUsingStatement(name,email);
 	}
 
+	// updating mail using statement
 	private int updateEmailUsingStatement(String name, String email) throws AddressBookException {
 		String sql = String.format("update contacts set email = '%s' where first_name ='%s';", email, name);
 		try (Connection connection = this.getConnection()) {
@@ -90,6 +95,7 @@ public class AddressBookDBService {
 		}
 	}
 
+	// getting contacts data
 	public List<Details> getContactsData(String name) throws AddressBookException {
 		List<Details> contactsList = null;
 		if (this.addressBookStatement == null) {
@@ -106,6 +112,7 @@ public class AddressBookDBService {
 	}
 
 
+	// using prepared statement for getting contact data
 	private void prepareStatementForContactData() throws AddressBookException {
 		try {
 			Connection connection = this.getConnection();
@@ -117,12 +124,14 @@ public class AddressBookDBService {
 		}
 	}
 
+	// getting addressbook data for a given date range
 	public List<Details> getAddressBookDetailsForDateRange(LocalDate startDate, LocalDate endDate) throws AddressBookException {
 		String sql = String.format("SELECT * FROM contacts WHERE start BETWEEN '%s' AND '%s';",
 				Date.valueOf(startDate), Date.valueOf(endDate));
 		return this.getAddressBookDataUsingDB(sql);
 	}
 
+	// reading contact data by city
 	public Map<String, Integer> readContactCountByCity() throws AddressBookException {
 		String sql ="SELECT state, COUNT(city) as city_count FROM address GROUP BY state;";
 		Map<String, Integer> countByCityStateMap= new HashMap<>();
@@ -140,6 +149,7 @@ public class AddressBookDBService {
 		return countByCityStateMap;
 	}
 
+	// adding contact data to the addressbook with transactions
 	public Details addContactToAddressBook(String firstName, String lastName, long phNum, String email,
 			LocalDate startDate) throws AddressBookException {
 		int contactId=-1;

@@ -8,9 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.bl.addressbookdb.AddressBookService.IOService;
+import com.google.gson.Gson;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 
 public class AddressBookServiceTest {
@@ -94,5 +100,47 @@ public class AddressBookServiceTest {
 			Assert.assertEquals(11,addressBookService.countEntries());
 		} catch (AddressBookException e) {
 		}
+	}
+	
+	@Before 
+	public void setup(){
+		RestAssured.baseURI="http://localhost";
+		RestAssured.port=3000;
+	}
+	public Details[] getContactsList() {
+		Response response = RestAssured.get("/contacts");
+		System.out.println("ADDRESS BOOK ENTRIES IN JSONServer:\n"+ response.asString());
+		Details[] arrayOfContacts = new Gson().fromJson(response.asString(), Details[].class);
+		return arrayOfContacts;
+	}
+	
+	private Response addContactsToJsonServer(Details contactDetails) {
+		String contactJson = new Gson().toJson(contactDetails);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(contactJson);
+		return request.post("/contacts");
+	}
+	
+	@Test
+	public void givenAddressBookDataInJSONServer_WhenRetrieved_ShouldMatchTheCount(){
+		Details[] arrayOfContacts = getContactsList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		long entries = addressBookService.countEntries();
+		Assert.assertEquals(2, entries);
+	}
+	
+	@Test 
+	public void givenContact_WhenAdded_ShouldGive201Response(){
+		Details[] arrayOfContacts = getContactsList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		Details contactDetails=null;
+		contactDetails = new Details(3,"Hitesh","Paliwal",1237896540L,"hts@gmail.com",123456,LocalDate.now());
+		System.out.println(contactDetails);
+		Response response = addContactsToJsonServer(contactDetails);
+		int result = response.getStatusCode();
+		Assert.assertEquals(201, result);
 	}
 }

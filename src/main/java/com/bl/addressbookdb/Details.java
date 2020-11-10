@@ -3,16 +3,20 @@ package com.bl.addressbookdb;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Details {
+	private int id;
 	private String firstName;
 	private String lastName;
 	private String address;
 	private String city;
 	private String state;
-	private int zip;
-	private String email;
 	private Long phNum;
-	private int id;
+	private String email;
+	private int zip;
 	public LocalDate start;
 
 	public Details() {
@@ -27,7 +31,11 @@ public class Details {
 		this.email = email;
 		this.start=start;
 	}
-	
+	public Details(int id, String firstName, String lastName, Long phNum,String email, int zip, LocalDate start){
+		this(firstName, lastName, phNum, email,start);
+		this.id=id;
+		this.zip=zip;
+	}
 	public Details(String firstName, String lastName, Long phNum,String email, LocalDate start, String city, String state){
 		this(firstName, lastName, phNum, email,start);
 		this.city=city;
@@ -138,6 +146,4 @@ public class Details {
 			return false;
 		return true;
 	}
-	
-	
 }
