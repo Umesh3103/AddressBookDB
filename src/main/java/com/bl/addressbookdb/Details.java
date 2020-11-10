@@ -23,31 +23,35 @@ public class Details {
 
 	}
 
-	public Details(String firstName, String lastName, Long phNum,String email, LocalDate start) {
+	public Details(String firstName, String lastName, Long phNum, String email, LocalDate start) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phNum = phNum;
 		this.email = email;
-		this.start=start;
-	}
-	public Details(int id, String firstName, String lastName, Long phNum,String email, LocalDate start){
-		this(firstName, lastName, phNum, email,start);
-		this.id=id;
-	}
-	public Details(String firstName, String lastName, Long phNum,String email, LocalDate start, String city, String state){
-		this(firstName, lastName, phNum, email,start);
-		this.city=city;
-		this.state=state;
+		this.start = start;
 	}
 
-	public Details(String firstName, String lastName, Long phNum,String email,LocalDate start,int contactId, String address, String city, String state, int zip) {
-		this(firstName, lastName, phNum, email,start);
-		this.id=contactId;
-		this.address=address;
-		this.city=city;
-		this.state=state;
-		this.zip=zip;
+	public Details(int id, String firstName, String lastName, Long phNum, String email, LocalDate start) {
+		this(firstName, lastName, phNum, email, start);
+		this.id = id;
+	}
+
+	public Details(String firstName, String lastName, Long phNum, String email, LocalDate start, String city,
+			String state) {
+		this(firstName, lastName, phNum, email, start);
+		this.city = city;
+		this.state = state;
+	}
+
+	public Details(String firstName, String lastName, Long phNum, String email, LocalDate start, int contactId,
+			String address, String city, String state, int zip) {
+		this(firstName, lastName, phNum, email, start);
+		this.id = contactId;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
 	}
 
 	public String getFirstName() {
@@ -120,10 +124,10 @@ public class Details {
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(firstName, lastName, phNum, email, start);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
