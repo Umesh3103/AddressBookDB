@@ -36,7 +36,7 @@ public class AddressBookServiceTest {
 		AddressBookService addressBookService = new AddressBookService();
 		try {
 			addressBookService.readAddressBookDB(IOService.DB_IO);
-			addressBookService.updateEmail("Umesh", "umesh.deora@gmail.com");
+			addressBookService.updateEmail("Umesh", "umesh.deora@gmail.com", IOService.DB_IO);
 			boolean result = addressBookService.checkContactInfoSyncWithDB("Umesh");
 			Assert.assertTrue(result);
 		} catch (AddressBookException e) {
@@ -160,5 +160,25 @@ public class AddressBookServiceTest {
 		}
 		long entries = addressBookService.countEntries();
 		Assert.assertEquals(6, entries);
+	}
+	
+	@Test
+	public void givenNewEmail_WhenUpdated_ShouldMatch200Response(){
+		Details[] arrayOfContacts = getContactsList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		try {
+			addressBookService.updateEmail("Umesh", "umesh@gmail.com",IOService.REST_IO);
+		} catch (AddressBookException e) {
+			System.out.println("Caught an exception");
+		}
+		Details contactDetails = addressBookService.getContactsData("Umesh");
+		String contactJson = new Gson().toJson(contactDetails);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(contactJson);
+		Response response = request.put("/contacts/"+contactDetails.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
 	}
 }
