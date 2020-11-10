@@ -16,7 +16,7 @@ public class Details {
 	private String state;
 	private Long phNum;
 	private String email;
-	private int zip;
+	private Integer zip;
 	public LocalDate start;
 
 	public Details() {
@@ -31,10 +31,9 @@ public class Details {
 		this.email = email;
 		this.start=start;
 	}
-	public Details(int id, String firstName, String lastName, Long phNum,String email, int zip, LocalDate start){
+	public Details(int id, String firstName, String lastName, Long phNum,String email, LocalDate start){
 		this(firstName, lastName, phNum, email,start);
 		this.id=id;
-		this.zip=zip;
 	}
 	public Details(String firstName, String lastName, Long phNum,String email, LocalDate start, String city, String state){
 		this(firstName, lastName, phNum, email,start);

@@ -137,8 +137,7 @@ public class AddressBookServiceTest {
 		AddressBookService addressBookService;
 		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
 		Details contactDetails=null;
-		contactDetails = new Details(3,"Hitesh","Paliwal",1237896540L,"hts@gmail.com",123456,LocalDate.now());
-		System.out.println(contactDetails);
+		contactDetails = new Details(3,"Hitesh","Paliwal",1237896540L,"hts@gmail.com",LocalDate.now());
 		Response response = addContactsToJsonServer(contactDetails);
 		int result = response.getStatusCode();
 		Assert.assertEquals(201, result);
