@@ -161,14 +161,14 @@ public class AddressBookServiceTest {
 		long entries = addressBookService.countEntries();
 		Assert.assertEquals(6, entries);
 	}
-	
+
 	@Test
-	public void givenNewEmail_WhenUpdated_ShouldMatch200Response(){
+	public void givenNewEmail_WhenUpdated_ShouldMatch200Response() {
 		Details[] arrayOfContacts = getContactsList();
 		AddressBookService addressBookService;
 		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
 		try {
-			addressBookService.updateEmail("Umesh", "umesh@gmail.com",IOService.REST_IO);
+			addressBookService.updateEmail("Umesh", "umesh@gmail.com", IOService.REST_IO);
 		} catch (AddressBookException e) {
 			System.out.println("Caught an exception");
 		}
@@ -177,8 +177,25 @@ public class AddressBookServiceTest {
 		RequestSpecification request = RestAssured.given();
 		request.header("Content-Type", "application/json");
 		request.body(contactJson);
-		Response response = request.put("/contacts/"+contactDetails.id);
+		Response response = request.put("/contacts/" + contactDetails.id);
 		int statusCode = response.getStatusCode();
 		Assert.assertEquals(200, statusCode);
+	}
+
+	@Test
+	public void givenContactToDelete_WhenDeleted_ShouldMatch200ResponseCount() {
+		Details[] arrayOfContacts = getContactsList();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfContacts));
+		Details contactDetails = addressBookService.getContactsData("Jofra");
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/contacts/" + contactDetails.id);
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+
+		addressBookService.deleteContactToAddressBook(contactDetails.getFirstName(), IOService.REST_IO);
+		long entries = addressBookService.countEntries();
+		Assert.assertEquals(5, entries);
 	}
 }

@@ -113,7 +113,16 @@ public class AddressBookService {
 		}
 	}
 
+	// adding contact to addressbook list
 	public void addContactToAddressBook(Details data, IOService restIo) {
 		addressBookList.add(data);
+	}
+
+	// deleting contact data from the addressbook
+	public void deleteContactToAddressBook(String name, IOService ioService) {
+		if(ioService.equals(IOService.REST_IO)){
+			Details contactDetails = this.getContactsData(name);
+			addressBookList.remove(contactDetails);
+		}
 	}
 }
